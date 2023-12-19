@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Iterator;
 
+/*
+    @desc: provides iterative operation to read csv file
+ */
 public class CSVStateCensusIterator implements Iterator {
     private BufferedReader reader;
     private String currentLine;
