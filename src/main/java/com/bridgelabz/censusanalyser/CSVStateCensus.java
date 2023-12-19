@@ -1,4 +1,4 @@
-package org.example;
+package com.bridgelabz.censusanalyser;
 
 /*
     @desc: class for storing object of each state

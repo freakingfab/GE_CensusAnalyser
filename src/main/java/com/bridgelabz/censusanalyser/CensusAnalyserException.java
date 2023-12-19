@@ -1,4 +1,4 @@
-package org.example;
+package com.bridgelabz.censusanalyser;
 
 /*
     @desc: exception handler class

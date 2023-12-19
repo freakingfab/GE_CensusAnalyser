@@ -1,4 +1,4 @@
-package org.example;
+package com.bridgelabz.censusanalyser;
 
 import java.util.List;
 
