@@ -37,4 +37,17 @@ public class StateCensusAnalyserTest {
             int expectedCount = 37;
             assertEquals("Number of records mismatch",expectedCount, numberOfRecords);
     }
+    /*
+        @desc: test for checking csv file: sad tc
+        @params: none
+        @return: void
+     */
+    @Test
+    public void givenIncorrectCSVFile_WhenLoaded_ShouldThrowException() {
+        try {
+            List<CSVStateCensus> censusDataListNew = analyser.loadCensusData("StateCensus.csv");
+        } catch (CensusAnalyserException e) {
+            assertEquals("Error reading CSV file", e.getMessage());
+        }
+    }
 }
