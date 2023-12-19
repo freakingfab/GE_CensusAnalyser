@@ -1,15 +1,19 @@
 package com.bridgelabz.censusanalyser;
 
-import java.io.BufferedReader;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 
 /*
     @desc: provides iterative operation to read csv file
  */
 public class CSVStateCensusIterator implements Iterator {
-    private BufferedReader reader;
+    private CSVReader reader;
     private String currentLine;
+    private String delimiter;
     private boolean headerSkipped = false;
 
     /*
@@ -17,8 +21,9 @@ public class CSVStateCensusIterator implements Iterator {
         @params: none
         @return: none
      */
-    public CSVStateCensusIterator(BufferedReader reader) {
+    public CSVStateCensusIterator(CSVReader reader, String delimiter) {
         this.reader = reader;
+        this.delimiter = delimiter;
     }
 
     /*
@@ -31,12 +36,12 @@ public class CSVStateCensusIterator implements Iterator {
         try {
             if (!headerSkipped) {
                 // Skip the header line
-                reader.readLine();
+                reader.readNext();
                 headerSkipped = true;
             }
-            currentLine = reader.readLine();
-            return currentLine != null;
-        } catch (IOException e) {
+            currentLine = Arrays.toString(reader.readNext());
+            return currentLine != "null";
+        } catch (IOException | CsvValidationException e) {
             return false;
         }
     }
@@ -48,11 +53,17 @@ public class CSVStateCensusIterator implements Iterator {
      */
     @Override
     public CSVStateCensus next() {
-        String[] data = currentLine.split(",");
-        int srNo = Integer.parseInt(data[0].substring(1));
-        String stateName = data[1];
-        int tin = Integer.parseInt(data[2]);
-        String stateCode = data[3].substring(0, data[3].length() - 1);
-        return new CSVStateCensus(srNo, stateName, tin, stateCode);
+        try {
+            String[] data = currentLine.split(delimiter);
+            int srNo = Integer.parseInt(data[0].substring(1));
+            String stateName = data[1];
+            int tin = Integer.parseInt(data[2]);
+            String stateCode = data[3].substring(0, data[3].length() - 1);
+            return new CSVStateCensus(srNo, stateName, tin, stateCode);
+        }
+        catch(NumberFormatException e){
+            System.err.println("Error: Incorrect Delimiter");
+            return null;
+        }
     }
 }

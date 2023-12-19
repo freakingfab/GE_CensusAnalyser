@@ -39,4 +39,5 @@ public class CSVStateCensus {
     public int getTin() {
         return tin;
     }
+
 }

@@ -1,6 +1,6 @@
 package com.bridgelabz.censusanalyser;
 
-import java.io.BufferedReader;
+import com.opencsv.CSVReader;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -28,12 +28,12 @@ public class StateCensusAnalyser {
         @params: csv file path
         @return: List
      */
-    public List loadCensusData(String csvFilePath) throws CensusAnalyserException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
-            Iterator csvStateCensusIterator = new CSVStateCensusIterator(reader);
+    public List loadCensusData(String csvFilePath, String delimiter) throws CensusAnalyserException {
+        try (CSVReader reader = new CSVReader(new FileReader(csvFilePath))) {
+            Iterator csvStateCensusIterator = new CSVStateCensusIterator(reader, delimiter);
             csvStateCensusIterator.forEachRemaining(censusDataList::add);
             return censusDataList;
-        } catch (IOException e) {
+        } catch (IOException e ) {
             throw new CensusAnalyserException("Error reading CSV file", CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
     }

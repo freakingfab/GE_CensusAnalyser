@@ -9,9 +9,8 @@ import static org.junit.Assert.*;
     @desc: test file for the project
  */
 public class StateCensusAnalyserTest {
-    private static final String CSV_FILE_PATH = "data/StateCensus.csv";
+
     private StateCensusAnalyser analyser;
-    private List<CSVStateCensus> censusDataList;
     /*
         @desc: setup function for test file
         @params: none
@@ -20,11 +19,6 @@ public class StateCensusAnalyserTest {
     @Before
     public void setup(){
         this.analyser = new StateCensusAnalyser();
-        try {
-            this.censusDataList = analyser.loadCensusData(CSV_FILE_PATH);
-        }catch (CensusAnalyserException e) {
-            e.printStackTrace();
-        }
     }
     /*
         @desc: test for checking records count: happy tc
@@ -33,9 +27,14 @@ public class StateCensusAnalyserTest {
      */
     @Test
     public void ShouldReturnCorrectRecordsCount() {
+        try {
+            List censusDataList = analyser.loadCensusData("data/StateCensus.csv",",");
             int numberOfRecords = analyser.getNumberOfRecords();
             int expectedCount = 37;
             assertEquals("Number of records mismatch",expectedCount, numberOfRecords);
+        } catch (CensusAnalyserException e) {
+            assertEquals("Error reading CSV file", e.getMessage());
+        }
     }
     /*
         @desc: test for checking csv file: sad tc
@@ -43,11 +42,37 @@ public class StateCensusAnalyserTest {
         @return: void
      */
     @Test
-    public void givenIncorrectCSVFile_WhenLoaded_ShouldThrowException() {
+    public void givenIncorrectCSVFile() {
         try {
-            List<CSVStateCensus> censusDataListNew = analyser.loadCensusData("StateCensus.csv");
+            List<CSVStateCensus> censusDataListNew = analyser.loadCensusData("StateCensus.csv",",");
         } catch (CensusAnalyserException e) {
             assertEquals("Error reading CSV file", e.getMessage());
+        }
+    }
+    /*
+        @desc: test for checking file type: sad tc
+        @parasm: none
+        @return: void
+     */
+    @Test
+    public void givenCorrectCSVFileButIncorrectType() {
+        try {
+            List<CSVStateCensus> censusDataListNew = analyser.loadCensusData("data/StateCensus.xml",",");
+        } catch (CensusAnalyserException e) {
+            assertEquals("Error reading CSV file", e.getMessage());
+        }
+    }
+    /*
+        @desc: test for checking delimiter: sad tc
+        @parasm: none
+        @return: void
+     */
+    @Test
+    public void givenCorrectCSVFileButIncorrectDelimiterType() {
+        try {
+            List<CSVStateCensus> censusDataListNew = analyser.loadCensusData("data/StateCensus.csv",";");
+        } catch (CensusAnalyserException e) {
+            assertEquals("Error: Incorrect Delimiter", e.getMessage());
         }
     }
 }
